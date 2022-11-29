@@ -1,7 +1,6 @@
 import React from 'react';
 
 function Table() {
-  const values = useContext(AuthContext);
   const [search, setSearch] = useState('');
   const head = ['Nome',
     'Rotation Period',
