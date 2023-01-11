@@ -1,31 +1,34 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import StarWarsContext from '../context/starWarscontext';
 
 export default function Table() {
   const data = useContext(StarWarsContext);
-  const [planetGuide, setplanetguide] = useState();
-  const [search, setSearch] = useState('');
-  const [list, setList] = useState([]);
+  const [search, setSearch] = useState([]);
+  const [inputs, setInputs] = useState({
+    filterName: '',
+  });
+
+  const handleChange = ({ target }) => {
+    setInputs({ ...inputs, [target.name]: target.value });
+  };
 
   useEffect(() => {
-    setplanetguide(data);
-    if (search.length > 0) {
-      const searchList = planetGuide.filter((element) => element.name.includes(search));
-      setList(searchList);
-    } else {
-      setList(planetGuide);
-    }
-  }, [data, search, planetGuide]);
+    setSearch(data);
+  }, [data]);
 
+  useEffect(() => {
+    setSearch(data.filter((value) => value.name.includes(inputs.filterName)));
+  }, [inputs.filterName, data]);
   return (
     <div>
       <label htmlFor="mainFilter">
         <input
           type="text"
           data-testid="name-filter"
-          id="mainFilter"
-          onChange={ ({ target }) => setSearch(target.value) }
-          value={ search }
+          id="filterName"
+          name="filterName"
+          onChange={ handleChange }
+          value={ inputs.filterName }
         />
       </label>
       <table>
@@ -47,7 +50,7 @@ export default function Table() {
           </tr>
         </thead>
         <tbody>
-          {data.map((element, index) => (
+          {search.map((element, index) => (
             <tr
               data={ element }
               key={ index }
