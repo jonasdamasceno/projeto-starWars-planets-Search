@@ -1,12 +1,23 @@
 import React, { useContext, useState, useEffect } from 'react';
 import StarWarsContext from '../context/starWarscontext';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const attribitesOfPlanets = [
+  'population',
+  'orbital_period',
+  'diameter',
+  'rotation_period',
+  'surface_water',
+];
 
 export default function Table() {
   const data = useContext(StarWarsContext);
   const [search, setSearch] = useState([]);
+  const [filterAttributesOp, setfilterAttributesOp] = useState([...attribitesOfPlanets]);
+
   const [inputs, setInputs] = useState({
     filterName: '',
-    filterPlanetsAtr: 'population',
+    filterAttributePlanet: 'population',
     filterComparison: 'maior que',
     qnt: '0',
   });
@@ -15,17 +26,22 @@ export default function Table() {
     setInputs({ ...inputs, [target.name]: target.value });
   };
 
+  // creditos ao bruno govea por me ajudar com essa função
   const handleFilter = (() => {
+    setfilterAttributesOp(filterAttributesOp.filter((el) => el
+    !== inputs.filterAttributePlanet));
+    inputs.filterAttributePlanet = filterAttributesOp[0] || '';
+
     switch (inputs.filterComparison) {
     case 'igual a':
-      setSearch(search.filter((el) => +el[inputs.filterPlanetsAtr] === +inputs.qnt));
+      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] === +inputs.qnt));
       break;
     case 'menor que':
-      setSearch(search.filter((el) => +el[inputs.filterPlanetsAtr] < +inputs.qnt));
+      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] < +inputs.qnt));
       break;
 
     default:
-      setSearch(search.filter((el) => +el[inputs.filterPlanetsAtr] > +inputs.qnt));
+      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] > +inputs.qnt));
       break;
     }
   });
@@ -39,19 +55,22 @@ export default function Table() {
   }, [inputs.filterName, data]);
   return (
     <div>
-      <div>
+      <div
+        className="container-fluid"
+      >
         <input
           id="filterName"
           type="text"
           name="filterName"
+          placeholder="pesquise aqui"
           value={ inputs.filterName }
           data-testid="name-filter"
           onChange={ handleChange }
         />
         <select
-          name="filterPlanetsAtr"
-          id="filterPlanetsAtr"
-          value={ inputs.filterPlanetsAtr }
+          name="filterAttributePlanet"
+          id="filterAttributePlanet"
+          value={ inputs.filterAttributePlanet }
           data-testid="column-filter"
           onChange={ handleChange }
         >
@@ -89,7 +108,9 @@ export default function Table() {
           Filter
         </button>
       </div>
-      <table>
+      <table
+        className="table table-dark table-striped"
+      >
         <thead>
           <tr>
             <th>Name</th>
