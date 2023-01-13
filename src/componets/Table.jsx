@@ -18,7 +18,7 @@ export default function Table() {
 
   const handleFilter = () => {
     const listFilter = list;
-    const values = filterValues;
+    const values = inputs;
     if (values.comparation === 'maior que' && values.population !== 'unknown') {
       const filtered = listFilter.filter((item) => +item[values.column] > +values.num);
       setList(filtered);
