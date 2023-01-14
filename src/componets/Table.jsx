@@ -14,7 +14,7 @@ export default function Table() {
   const data = useContext(StarWarsContext);
   const [search, setSearch] = useState([]);
   const [filterAttributesOp, setfilterAttributesOp] = useState([...attribitesOfPlanets]);
-
+  const [filters, setFilters] = useState([]);
   const [inputs, setInputs] = useState({
     filterName: '',
     filterAttributePlanet: 'population',
@@ -30,7 +30,12 @@ export default function Table() {
   const handleFilter = (() => {
     setfilterAttributesOp(filterAttributesOp.filter((el) => el
     !== inputs.filterAttributePlanet));
-    inputs.filterAttributePlanet = filterAttributesOp[0] || '';
+    setFilters(
+      [
+        ...filters,
+        `${inputs.filterAttributePlanet} ${inputs.filterComparison} ${inputs.qnt}`,
+      ],
+    );
 
     switch (inputs.filterComparison) {
     case 'igual a':
@@ -47,8 +52,17 @@ export default function Table() {
   });
 
   useEffect(() => {
-    setSearch(data);
+    setSearch(...data);
   }, [data]);
+
+  useEffect(() => {
+    setInputs({
+      filterName: '',
+      filterAttributePlanet: filterAttributesOp[0] || '',
+      filterComparison: 'maior que',
+      filterQnt: '0',
+    });
+  }, [filterAttributesOp]);
 
   useEffect(() => {
     setSearch(data.filter((value) => value.name.includes(inputs.filterName)));
