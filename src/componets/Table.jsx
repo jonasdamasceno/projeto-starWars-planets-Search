@@ -13,8 +13,9 @@ const attribitesOfPlanets = [
 export default function Table() {
   const data = useContext(StarWarsContext);
   const [search, setSearch] = useState([]);
-  const [filterAttributesOp, setfilterAttributesOp] = useState([...attribitesOfPlanets]);
+  const [filterAttributes, setfilterAttributes] = useState([...attribitesOfPlanets]);
   const [filters, setFilters] = useState([]);
+  const [deletFilters, setDeletFilters] = useState([]);
   const [inputs, setInputs] = useState({
     filterName: '',
     filterAttributePlanet: 'population',
@@ -28,7 +29,7 @@ export default function Table() {
 
   // creditos ao bruno govea por me ajudar com essa função
   const handleFilter = (() => {
-    setfilterAttributesOp(filterAttributesOp.filter((el) => el
+    setfilterAttributes(filterAttributes.filter((el) => el
     !== inputs.filterAttributePlanet));
     setFilters(
       [
@@ -39,17 +40,42 @@ export default function Table() {
 
     switch (inputs.filterComparison) {
     case 'igual a':
+      setDeletFilters({
+        ...deletFilters,
+        [inputs.filterAttributePlanet]:
+        search.filter((value) => ((+value[inputs.filterAttributePlanet] !== +inputs.qnt)
+        || (value[inputs.filterAttributePlanet] === 'unknown'))),
+      });
       setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] === +inputs.qnt));
       break;
     case 'menor que':
+      setDeletFilters({
+        ...deletFilters,
+        [inputs.filterAttributePlanet]:
+        search.filter((value) => ((+value[inputs.filterAttributePlanet] >= +inputs.qnt)
+        || (value[inputs.filterAttributePlanet] === 'unknown'))),
+      });
       setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] < +inputs.qnt));
       break;
 
     default:
+      setDeletFilters({
+        ...deletFilters,
+        [inputs.filterAttributePlanet]:
+        search.filter((value) => ((+value[inputs.filterAttributePlanet] <= +inputs.qnt)
+        || (value[inputs.filterAttributePlanet] === 'unknown'))),
+      });
       setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] > +inputs.qnt));
       break;
     }
   });
+
+  const removeFilter = (str) => {
+    const key = str.split(' ')[0];
+    setfilterAttributes([...filterAttributes, key]);
+    setFilters(filters.filter((el) => !(el.includes(str))));
+    setSearch([...search, ...deletFilters[key]]);
+  };
 
   useEffect(() => {
     setSearch(...data);
@@ -58,11 +84,11 @@ export default function Table() {
   useEffect(() => {
     setInputs({
       filterName: '',
-      filterAttributePlanet: filterAttributesOp[0] || '',
+      filterAttributePlanet: filterAttributes[0] || '',
       filterComparison: 'maior que',
       qnt: '0',
     });
-  }, [filterAttributesOp]);
+  }, [filterAttributes]);
 
   useEffect(() => {
     setSearch(data.filter((value) => value.name.includes(inputs.filterName)));
@@ -88,7 +114,7 @@ export default function Table() {
           data-testid="column-filter"
           onChange={ handleChange }
         >
-          { filterAttributesOp.map((el, i) => <option el={ el } key={ i }>{el}</option>)}
+          { filterAttributes.map((el, i) => <option el={ el } key={ i }>{el}</option>)}
         </select>
 
         <select
@@ -117,6 +143,21 @@ export default function Table() {
         >
           Filter
         </button>
+        {
+          filters.map((value, i) => (
+            <div key={ i + value } data-testid="filter">
+              { value }
+              <button
+                type="button"
+                onClick={ () => removeFilter(value) }
+              >
+
+                Excluir
+
+              </button>
+            </div>
+          ))
+        }
       </div>
       <table
         className="table table-dark table-striped"
