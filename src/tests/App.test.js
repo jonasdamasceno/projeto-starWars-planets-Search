@@ -45,7 +45,7 @@ describe("testa a renderização da pagina", () => {
     expect(bntExcluir).toBeInTheDocument();
     expect(searchAnswer).toBeInTheDocument();
   });
-  it("testa o funcionamento dos botões de excluir e de excluir todos os filtros", () => {
+  it("testa o funcionamento do filtro de comparação", () => {
     render(
       <StarWarsProvider>
         <App />
@@ -75,4 +75,7 @@ describe("testa a renderização da pagina", () => {
     userEvent.click(bntFilter);
     expect(inputComparison).toBeInTheDocument();
   });
+
+  it('testa o funcionamento dos botões de excluir e excluir todos os filtros')
+
 });
