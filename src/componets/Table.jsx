@@ -70,11 +70,17 @@ export default function Table() {
     }
   });
 
-  const removeFilter = (str) => {
+  const deleteAppliedFilters = (str) => {
     const key = str.split(' ')[0];
     setfilterAttributes([...filterAttributes, key]);
     setFilters(filters.filter((el) => !(el.includes(str))));
     setSearch([...search, ...deletFilters[key]]);
+  };
+
+  const deleteAllAppliedFilters = () => {
+    setfilterAttributes([...filterAttributes]);
+    setFilters([]);
+    setSearch([...data]);
   };
 
   useEffect(() => {
@@ -149,7 +155,7 @@ export default function Table() {
               { value }
               <button
                 type="button"
-                onClick={ () => removeFilter(value) }
+                onClick={ () => deleteAppliedFilters(value) }
               >
 
                 Excluir
@@ -159,6 +165,15 @@ export default function Table() {
           ))
         }
       </div>
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ () => deleteAllAppliedFilters() }
+      >
+
+        Remover todos filtros
+
+      </button>
       <table
         className="table table-dark table-striped"
       >
@@ -185,6 +200,7 @@ export default function Table() {
               data={ element }
               key={ index }
             >
+              <td data-testid="planets">{element.name}</td>
               <td>{element.name}</td>
               <td>{element.rotation_period}</td>
               <td>{element.orbital_period}</td>
