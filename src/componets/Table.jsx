@@ -27,50 +27,29 @@ export default function Table() {
   };
 
   // creditos ao bruno govea por me ajudar com essa função
-  const handleFilter = () => {
-    setatributesOption(atributesOption.filter((val) => val !== inputs.filterPlanetsAtr));
-    setFilters([...filters, `${inputs.filterPlanetsAtr} 
-    ${inputs.filterComparison} ${inputs.filterQnt}`]);
-
-    const filterEqual = () => {
-      setExclude({
-        ...exclude,
-        [inputs.filterPlanetsAtr]: search
-          .filter((value) => ((+value[inputs.filterPlanetsAtr] !== +inputs.filterQnt)
-      || (value[inputs.filterPlanetsAtr] === 'unknown'))) });
-      setSearch(search.filter((e) => +e[inputs.filterPlanetsAtr] === +inputs.filterQnt));
-    };
-
-    const filterLess = () => {
-      setExclude({
-        ...exclude,
-        [inputs.filterPlanetsAtr]: search
-          .filter((value) => ((+value[inputs.filterPlanetsAtr] >= +inputs.filterQnt)
-      || (value[inputs.filterPlanetsAtr] === 'unknown'))) });
-      setSearch(search.filter((e) => +e[inputs.filterPlanetsAtr] < +inputs.filterQnt));
-    };
-
-    const filterGreater = () => {
-      setExclude({
-        ...exclude,
-        [inputs.filterPlanetsAtr]: search
-          .filter((value) => ((+value[inputs.filterPlanetsAtr] <= +inputs.filterQnt)
-        || (value[inputs.filterPlanetsAtr] === 'unknown'))) });
-      setSearch(search.filter((e) => +e[inputs.filterPlanetsAtr] > +inputs.filterQnt));
-    };
+  const handleFilter = (() => {
+    setfilterAttributesOp(filterAttributesOp.filter((el) => el
+    !== inputs.filterAttributePlanet));
+    setFilters(
+      [
+        ...filters,
+        `${inputs.filterAttributePlanet} ${inputs.filterComparison} ${inputs.qnt}`,
+      ],
+    );
 
     switch (inputs.filterComparison) {
     case 'igual a':
-      filterEqual();
+      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] === +inputs.qnt));
       break;
     case 'menor que':
-      filterLess();
+      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] < +inputs.qnt));
       break;
+
     default:
-      filterGreater();
+      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] > +inputs.qnt));
       break;
     }
-  };
+  });
 
   useEffect(() => {
     setSearch(...data);
@@ -81,7 +60,7 @@ export default function Table() {
       filterName: '',
       filterAttributePlanet: filterAttributesOp[0] || '',
       filterComparison: 'maior que',
-      filterQnt: '0',
+      qnt: '0',
     });
   }, [filterAttributesOp]);
 
