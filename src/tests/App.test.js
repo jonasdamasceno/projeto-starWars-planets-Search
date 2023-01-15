@@ -76,6 +76,15 @@ describe("testa a renderização da pagina", () => {
     expect(inputComparison).toBeInTheDocument();
   });
 
-  it('testa o funcionamento dos botões de excluir e excluir todos os filtros')
-
+  it("testa o funcionamento dos botões de excluir e excluir todos os filtros", () => {
+    render(
+      <StarWarsProvider>
+        <App />
+      </StarWarsProvider>
+    );
+    const bntFilter = screen.getByTestId(buttonFilter);
+    const inputColumn = screen.getByTestId(inputfilterColumn);
+    const inputComparison = screen.getByTestId(inputfilterComparison);
+    const inputValue = screen.getByTestId(inputfilterValue);
+  });
 });
