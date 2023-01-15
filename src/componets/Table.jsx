@@ -27,29 +27,50 @@ export default function Table() {
   };
 
   // creditos ao bruno govea por me ajudar com essa função
-  const handleFilter = (() => {
-    setfilterAttributesOp(filterAttributesOp.filter((el) => el
-    !== inputs.filterAttributePlanet));
-    setFilters(
-      [
-        ...filters,
-        `${inputs.filterAttributePlanet} ${inputs.filterComparison} ${inputs.qnt}`,
-      ],
-    );
+  const handleFilter = () => {
+    setatributesOption(atributesOption.filter((val) => val !== inputs.filterPlanetsAtr));
+    setFilters([...filters, `${inputs.filterPlanetsAtr} 
+    ${inputs.filterComparison} ${inputs.filterQnt}`]);
+
+    const filterEqual = () => {
+      setExclude({
+        ...exclude,
+        [inputs.filterPlanetsAtr]: search
+          .filter((value) => ((+value[inputs.filterPlanetsAtr] !== +inputs.filterQnt)
+      || (value[inputs.filterPlanetsAtr] === 'unknown'))) });
+      setSearch(search.filter((e) => +e[inputs.filterPlanetsAtr] === +inputs.filterQnt));
+    };
+
+    const filterLess = () => {
+      setExclude({
+        ...exclude,
+        [inputs.filterPlanetsAtr]: search
+          .filter((value) => ((+value[inputs.filterPlanetsAtr] >= +inputs.filterQnt)
+      || (value[inputs.filterPlanetsAtr] === 'unknown'))) });
+      setSearch(search.filter((e) => +e[inputs.filterPlanetsAtr] < +inputs.filterQnt));
+    };
+
+    const filterGreater = () => {
+      setExclude({
+        ...exclude,
+        [inputs.filterPlanetsAtr]: search
+          .filter((value) => ((+value[inputs.filterPlanetsAtr] <= +inputs.filterQnt)
+        || (value[inputs.filterPlanetsAtr] === 'unknown'))) });
+      setSearch(search.filter((e) => +e[inputs.filterPlanetsAtr] > +inputs.filterQnt));
+    };
 
     switch (inputs.filterComparison) {
     case 'igual a':
-      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] === +inputs.qnt));
+      filterEqual();
       break;
     case 'menor que':
-      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] < +inputs.qnt));
+      filterLess();
       break;
-
     default:
-      setSearch(search.filter((el) => +el[inputs.filterAttributePlanet] > +inputs.qnt));
+      filterGreater();
       break;
     }
-  });
+  };
 
   useEffect(() => {
     setSearch(...data);
