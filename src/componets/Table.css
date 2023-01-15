@@ -1,0 +1,21 @@
+table {
+  margin-top: 15px;
+}
+
+table,
+th,
+tr,
+td {
+  border: 2px solid lightgray;
+  border-collapse: collapse;
+  padding: 5px;
+  text-align: center;
+}
+
+th {
+  width: 11.11%;
+}
+
+tr {
+  height: 70;
+}

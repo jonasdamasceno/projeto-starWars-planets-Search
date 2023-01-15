@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import StarWarsContext from '../context/starWarscontext';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './Table.css';
 
 const attribitesOfPlanets = [
   'population',
@@ -115,6 +116,7 @@ export default function Table() {
         />
         <select
           name="filterAttributePlanet"
+          className="form-select form-select-lg sm"
           id="filterAttributePlanet"
           value={ inputs.filterAttributePlanet }
           data-testid="column-filter"
@@ -144,6 +146,7 @@ export default function Table() {
         />
         <button
           type="button"
+          className="btn btn-outline-secondary"
           data-testid="button-filter"
           onClick={ handleFilter }
         >
@@ -155,6 +158,7 @@ export default function Table() {
               { value }
               <button
                 type="button"
+                className="btn btn-outline-secondary"
                 onClick={ () => deleteAppliedFilters(value) }
               >
 
@@ -167,6 +171,7 @@ export default function Table() {
       </div>
       <button
         type="button"
+        className="btn btn-outline-secondary"
         data-testid="button-remove-filters"
         onClick={ () => deleteAllAppliedFilters() }
       >
