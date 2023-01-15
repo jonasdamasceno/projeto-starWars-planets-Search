@@ -5,12 +5,12 @@ import StarWarsProvider from "../context/starWarsProvider";
 import userEvent from "@testing-library/user-event";
 import testData from "../../cypress/mocks/testData";
 
-const inputfilterName = "name-filter";
+const inputFilterName = "name-filter";
 const buttonFilter = "button-filter";
-const inputfilterColumn = "column-filter";
-const inputfilterComparison = "comparison-filter";
-const inputfilterValue = "value-filter";
-const ButtonDeleteAllFilters = "button-remove-filters";
+const inputFilterComparison = "comparison-filter";
+const inputFilterValeu = "value-filter";
+const buttonDeleteAllFilters = "button-remove-filters";
+const inputFilterColumn = "column-filter";
 
 describe("testa a renderização da pagina", () => {
   beforeEach(() => {
@@ -19,6 +19,91 @@ describe("testa a renderização da pagina", () => {
       json: jest.fn().mockResolvedValue(testData),
     });
   });
+
+  test("Testa a renderização", async () => {
+    render(
+      <StarWarsProvider>
+        <App />
+      </StarWarsProvider>
+    );
+    const filterBtn = screen.getByTestId(buttonFilter);
+    const nameInput = screen.getByTestId(inputFilterName);
+    userEvent.type(nameInput, "oo");
+    userEvent.click(filterBtn);
+    const excludeBtn = await screen.findByText("Excluir");
+    userEvent.click(excludeBtn);
+    const tatooine = await screen.findByText("Tatooine");
+    expect(tatooine).toBeInTheDocument();
+  });
+
+  test("Testa o filtro de comparação", async () => {
+    render(
+      <StarWarsProvider>
+        <App />
+      </StarWarsProvider>
+    );
+    const comparison = screen.getByTestId(inputFilterComparison);
+    const filterBtn = screen.getByTestId(buttonFilter);
+    const column = screen.getByTestId(inputFilterColumn);
+    const valueFilter = screen.getByTestId(inputFilterValeu);
+    const remove = screen.getByTestId("button-remove-filters");
+    userEvent.selectOptions(column, "population");
+    expect(column).toBeInTheDocument();
+    userEvent.selectOptions(comparison, "menor que");
+    userEvent.type(valueFilter, "1000000");
+    userEvent.click(filterBtn);
+    userEvent.selectOptions(column, "diameter");
+    userEvent.type(valueFilter, "10200");
+    const tatooine = await screen.findByText("Tatooine");
+    expect(tatooine).toBeInTheDocument();
+
+    userEvent.selectOptions(column, "orbital_period");
+    const excludeBtn = screen.getByText("Excluir");
+    const yavin = await screen.findByText("Yavin IV");
+    expect(yavin).toBeInTheDocument();
+    userEvent.click(excludeBtn);
+    userEvent.click(filterBtn);
+    userEvent.click(remove);
+  });
+
+  test("Teste dos botões de excluir", async () => {
+    render(
+      <StarWarsProvider>
+        <App />
+      </StarWarsProvider>
+    );
+
+    const column = screen.getByTestId(inputFilterColumn);
+    const comparison = screen.getByTestId(inputFilterComparison);
+    const valueFilter = screen.getByTestId(inputFilterValeu);
+    const filterBtn = screen.getByTestId(buttonFilter);
+
+    userEvent.selectOptions(column, "rotation_period");
+    userEvent.selectOptions(comparison, "maior que");
+    valueFilter.value = "";
+    userEvent.type(valueFilter, "22");
+    userEvent.click(filterBtn);
+
+    userEvent.selectOptions(column, "orbital_period");
+    userEvent.selectOptions(comparison, "menor que");
+    valueFilter.value = "";
+    userEvent.type(valueFilter, "400");
+    userEvent.click(filterBtn);
+
+    userEvent.selectOptions(column, "diameter");
+    userEvent.selectOptions(comparison, "menor que");
+    valueFilter.value = "";
+    userEvent.type(valueFilter, "10500");
+    userEvent.click(filterBtn);
+
+    userEvent.selectOptions(column, "surface_water");
+    userEvent.selectOptions(comparison, "igual a");
+    valueFilter.value = "";
+    userEvent.type(valueFilter, "15");
+    userEvent.click(filterBtn);
+    userEvent.click(filterBtn);
+    expect(comparison).toBeInTheDocument();
+  });
   it("testa a renderização dos campos de filtragem", async () => {
     render(
       <StarWarsProvider>
@@ -26,11 +111,11 @@ describe("testa a renderização da pagina", () => {
       </StarWarsProvider>
     );
     const bntFilter = screen.getByTestId(buttonFilter);
-    const inputName = screen.getByTestId(inputfilterName);
-    const inputColumn = screen.getByTestId(inputfilterColumn);
-    const inputComparison = screen.getByTestId(inputfilterComparison);
-    const inputValue = screen.getByTestId(inputfilterValue);
-    const bntAllDelet = screen.getByTestId(ButtonDeleteAllFilters);
+    const inputName = screen.getByTestId(inputFilterName);
+    const inputColumn = screen.getByTestId(inputFilterColumn);
+    const inputComparison = screen.getByTestId(inputFilterComparison);
+    const inputValue = screen.getByTestId(inputFilterValeu);
+    const bntAllDelet = screen.getByTestId(buttonDeleteAllFilters);
 
     expect(bntFilter).toBeInTheDocument();
     expect(inputColumn).toBeInTheDocument();
@@ -45,46 +130,36 @@ describe("testa a renderização da pagina", () => {
     expect(bntExcluir).toBeInTheDocument();
     expect(searchAnswer).toBeInTheDocument();
   });
-  it("testa o funcionamento do filtro de comparação", () => {
+  it("testa o funcionamento dos botões de excluir e excluir todos os filtros", async () => {
     render(
       <StarWarsProvider>
         <App />
       </StarWarsProvider>
     );
     const bntFilter = screen.getByTestId(buttonFilter);
-    const inputColumn = screen.getByTestId(inputfilterColumn);
-    const inputComparison = screen.getByTestId(inputfilterComparison);
-    const inputValue = screen.getByTestId(inputfilterValue);
+    const inputColumn = screen.getByTestId(inputFilterColumn);
+    const inputComparison = screen.getByTestId(inputFilterComparison);
+    const inputValue = screen.getByTestId(inputFilterValeu);
+    const bntDelet = screen.getByText("Excluir");
+    const bntAllDelet = screen.getByTestId(buttonDeleteAllFilters);
 
-    userEvent.selectOptions(inputColumn, "rotation_period");
+    userEvent.selectOptions(inputColumn, "population");
+    expect(inputColumn).toBeInTheDocument();
     userEvent.selectOptions(inputComparison, "maior que");
-    inputValue.value = "";
-    userEvent.type(inputValue, "22");
+    userEvent.type(inputValue, "2000000");
     userEvent.click(bntFilter);
-
+    userEvent.selectOptions(inputColumn, "diameter");
+    userEvent.selectOptions(inputComparison, "maior que");
+    userEvent.type(inputValue, "12499");
+    userEvent.click(bntFilter);
     userEvent.selectOptions(inputColumn, "orbital_period");
     userEvent.selectOptions(inputComparison, "menor que");
-    inputValue.value = "";
-    userEvent.type(inputValue, "400");
+    userEvent.type(inputValue, "365");
     userEvent.click(bntFilter);
-
-    userEvent.selectOptions(inputColumn, "surface_water");
-    userEvent.selectOptions(inputComparison, "igual a");
-    inputValue.value = "";
-    userEvent.type(inputValue, "15");
+    const Alderaan = await screen.findByText("Alderaan");
+    expect(Alderaan).toBeInTheDocument();
+    userEvent.click(bntDelet);
     userEvent.click(bntFilter);
-    expect(inputComparison).toBeInTheDocument();
-  });
-
-  it("testa o funcionamento dos botões de excluir e excluir todos os filtros", () => {
-    render(
-      <StarWarsProvider>
-        <App />
-      </StarWarsProvider>
-    );
-    const bntFilter = screen.getByTestId(buttonFilter);
-    const inputColumn = screen.getByTestId(inputfilterColumn);
-    const inputComparison = screen.getByTestId(inputfilterComparison);
-    const inputValue = screen.getByTestId(inputfilterValue);
+    userEvent.click(bntAllDelet);
   });
 });

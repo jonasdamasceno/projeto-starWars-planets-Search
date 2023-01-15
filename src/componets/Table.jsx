@@ -101,7 +101,8 @@ export default function Table() {
     setSearch(data.filter((value) => value.name.includes(inputs.filterName)));
   }, [inputs.filterName, data]);
   return (
-    <div>
+    <div className="black-syk">
+      <h1># Star Wars Search Planets $</h1>
       <div
         className="container-fluid"
       >
@@ -205,7 +206,7 @@ export default function Table() {
               data={ element }
               key={ index }
             >
-              <td data-testid="planets">{element.name}</td>
+
               <td>{element.name}</td>
               <td>{element.rotation_period}</td>
               <td>{element.orbital_period}</td>

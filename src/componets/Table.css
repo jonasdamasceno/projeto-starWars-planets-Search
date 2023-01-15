@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'star jedi';
+  src: url(/home/jonas/.cache/.fr-rt7Sos/starjedi/Starjedi.ttf);
+}
+
 table {
   margin-top: 15px;
 }
@@ -15,4 +20,15 @@ th {
 
 tr {
   height: 70;
+}
+
+h1 {
+  font-family: 'star jedi';
+  color: yellow
+
+}
+
+.black-sky {
+  background-color: black;
+  color: white;
 }
