@@ -197,10 +197,6 @@ describe("testa a renderização da pagina", () => {
     filters = await screen.findAllByTestId("filter");
     expect(filters).toHaveLength(2);
 
-    // const delBtn = screen.getByRole('button', {name: 'Excluir' })
-    // userEvent.click(delBtn);
-    // expect(delBtn).not.toBeInTheDocument();
-
     userEvent.selectOptions(columnFilter, "surface_water");
     userEvent.selectOptions(comparisonFilter, "igual a");
     userEvent.type(valueFilter, "40");
@@ -211,8 +207,7 @@ describe("testa a renderização da pagina", () => {
     filters = await screen.findAllByTestId("filter");
     expect(filters).toHaveLength(2);
 
-    const delAllBtn = screen.getByTestId("button-remove-filters");
-    expect(delAllBtn).toBeInTheDocument();
+    const delAllBtn = screen.getByTestId(buttonDeleteAllFilters);
     userEvent.click(delAllBtn);
     table2 = await screen.findAllByTestId("planet-name");
     expect(table2).toHaveLength(10);
