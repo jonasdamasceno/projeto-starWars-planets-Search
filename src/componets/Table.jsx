@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import StarWarsContext from '../context/starWarscontext';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Table.css';
 
 const attribitesOfPlanets = [
   'population',
@@ -27,7 +26,8 @@ export default function Table() {
   const handleChange = ({ target }) => {
     setInputs({ ...inputs, [target.name]: target.value });
   };
-
+  console.log(search);
+  console.log(inputs.filterAttributePlanet);
   // creditos ao bruno govea por me ajudar com essa função
   const handleFilter = (() => {
     setfilterAttributes(filterAttributes.filter((el) => el
@@ -102,7 +102,7 @@ export default function Table() {
   }, [inputs.filterName, data]);
   return (
     <div className="black-syk">
-      <h1># Star Wars Search Planets $</h1>
+      <h1>Starwars Planets Search</h1>
       <div
         className="container-fluid"
       >
@@ -207,9 +207,9 @@ export default function Table() {
               key={ index }
             >
 
-              <td>{element.name}</td>
+              <td data-testid="planet-name">{element.name}</td>
               <td>{element.rotation_period}</td>
-              <td>{element.orbital_period}</td>
+              <td data-testid="orbital_period">{element.orbital_period}</td>
               <td>{element.diameter}</td>
               <td>{element.climate}</td>
               <td>{element.gravity}</td>
