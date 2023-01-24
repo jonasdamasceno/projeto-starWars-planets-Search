@@ -67,26 +67,6 @@ describe("testa a renderização da pagina", () => {
     userEvent.click(filterBtn);
     userEvent.click(remove);
   });
-  // test("Testa o filtro de comparação", async () => {
-  //   render(
-  //     <StarWarsProvider>
-  //       <App />
-  //     </StarWarsProvider>
-  //   );
-
-  //   const column = screen.getByTestId(inputFilterColumn);
-  //   const comparison = screen.getByTestId(inputFilterComparison);
-  //   const valueFilter = screen.getByTestId(inputFilterValeu);
-  //   const filterBtn = screen.getByTestId(buttonFilter);
-
-  //   userEvent.selectOptions(column, "diameter");
-  //   userEvent.selectOptions(comparison, "igual a");
-  //   valueFilter.value = "";
-  //   userEvent.type(valueFilter, "7200");
-  //   userEvent.click(filterBtn);
-  //   const searchResult = await screen.getByTestId("planet-name");
-  //   expect(searchResult).toEqual("Hoth");
-  // });
 
   test("Testa o filtro de comparação", async () => {
     render(
